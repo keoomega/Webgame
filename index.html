@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Clicker</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://googleapis.com" rel="stylesheet">
+</head>
+<body>
+    <div class="game-container">
+        <button id="theme-toggle" class="theme-btn">🌙 Dark Mode</button>
+
+        <h1>Math Clicker</h1>
+        
+        <div class="score-board">
+            <div class="stat-box">
+                <span class="stat-label">Score</span>
+                <span id="score" class="stat-value">0</span>
+            </div>
+            <div class="stat-sub-row">
+                <div class="stat-box sub">
+                    <span class="stat-label">Per Click</span>
+                    <span id="cpc" class="stat-value-sub">1</span>
+                </div>
+                <div class="stat-box sub">
+                    <span class="stat-label">Per Second</span>
+                    <span id="cps" class="stat-value-sub">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating text container inside the button wrapper -->
+        <div class="click-wrapper" id="click-wrapper">
+            <button id="click-btn"> CLICK HERE </button>
+        </div>
+
+        <div class="shop">
+            <h2> SHOP </h2>
+            
+            <div class="shop-section">
+                <h3> Click Power Upgrades </h3>
+                <button class="upgrade-btn cpc-btn" data-cost="15" data-cpc="1" data-cps="0" data-name="Sharper Pencil">
+                    ✏️ Pencil (Cost: 15) <br><small> Gives +1 per click </small>
+                </button>
+                <button class="upgrade-btn cpc-btn" data-cost="150" data-cpc="5" data-cps="0" data-name="Cool Calculator">
+                    📟 Calculator (Cost: 150) <br><small>Gives +5 per click</small>
+                </button>
+                <button class="upgrade-btn cpc-btn" data-cost="1200" data-cpc="25" data-cps="0" data-name="Super Computer">
+                    💻 Computer (Cost: 1200) <br><small>Gives +25 per click</small>
+                </button>
+            </div>
+
+            <div class="shop-section">
+                <h3>Auto-Click Upgrades</h3>
+                <button class="upgrade-btn cps-btn" data-cost="30" data-cpc="0" data-cps="1" data-name="Math Buddy">
+                    🧑‍🏫 Friend In Math Class (Cost: 30) <br><small>Earns +1 every second</small>
+                </button>
+                <button class="upgrade-btn cps-btn" data-cost="300" data-cpc="0" data-cps="10" data-name="Math Professor">
+                    🎓 Math Teacher (Cost: 300) <br><small>Earns +10 every second</small>
+                </button>
+                <button class="upgrade-btn cps-btn" data-cost="2500" data-cpc="0" data-cps="75" data-name="Robo Mathematician">
+                    🤖 Math Robot (Cost: 2500) <br><small>Earns +75 every second</small>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Math Quiz Modal -->
+    <div id="math-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">Math Question (Type to answer or use the arrows)</div>
+            <h2 id="modal-title">Unlock Upgrade</h2>
+            <p id="math-question">5 + 5 = ?</p>
+            <input type="number" id="math-answer" placeholder="?" autocomplete="off">
+            <button id="submit-answer">🚀 Check Answer! 🚀</button>
+            <p id="error-msg" class="hidden">Try again</p>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
