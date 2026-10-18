@@ -58,7 +58,7 @@ upgradeBtns.forEach(btn => {
             pendingUpgrade = btn;
             triggerMathQuestion(cost);
         } else {
-            alert("Keep clicking! You need more stars for this upgrade! ⭐");
+            alert("Keep clicking! You need more score for this upgrade! ⭐");
         }
     });
 });
@@ -67,10 +67,9 @@ function createFloatingText(x, y, text) {
     const el = document.createElement('div');
     el.className = 'floating-text';
     el.textContent = text;
+    // FIXED: Use style properties directly to preserve the base CSS class animations
     el.style.left = `${x}px`;
     el.style.top = `${y}px`;
-    
-    el.setAttribute('style', `left: ${x}px; top: ${y}px;`);
     
     clickWrapper.appendChild(el);
     
@@ -88,24 +87,24 @@ function triggerMathQuestion(cost) {
         operator = '+';
         correctAnswer = num1 + num2;
     } else if (cost < 200) {
-        num1 = Math.floor(Math.random() * 15) + 10; // 10 to 24
-        num2 = Math.floor(Math.random() * 9) + 1;   // 1 to 9
+        num1 = Math.floor(Math.random() * 15) + 10; 
+        num2 = Math.floor(Math.random() * 9) + 1;   
         operator = '-';
         correctAnswer = num1 - num2;
     } else if (cost < 1000) {
-        num1 = Math.floor(Math.random() * 6) + 2;   // 2 to 7
-        num2 = Math.floor(Math.random() * 9) + 2;   // 2 to 10
+        num1 = Math.floor(Math.random() * 6) + 2;   
+        num2 = Math.floor(Math.random() * 9) + 2;   
         operator = '×';
         correctAnswer = num1 * num2;
     } else {
         if (Math.random() < 0.5) {
-            num2 = Math.floor(Math.random() * 7) + 2; // Divisor (2 to 8)
-            correctAnswer = Math.floor(Math.random() * 10) + 2; // Result (2 to 11)
-            num1 = num2 * correctAnswer; // Total dividend
+            num2 = Math.floor(Math.random() * 7) + 2; 
+            correctAnswer = Math.floor(Math.random() * 10) + 2; 
+            num1 = num2 * correctAnswer; 
             operator = '÷';
         } else {
-            num1 = Math.floor(Math.random() * 4) + 11; // 11 to 14
-            num2 = Math.floor(Math.random() * 8) + 3;  // 3 to 10
+            num1 = Math.floor(Math.random() * 4) + 11; 
+            num2 = Math.floor(Math.random() * 8) + 3;  
             operator = '×';
             correctAnswer = num1 * num2;
         }
@@ -149,19 +148,24 @@ function applyUpgrade(btn) {
     const newCost = Math.floor(cost * 1.6);
     btn.setAttribute('data-cost', newCost);
     
+    // FIXED: Dynamically pulls the original emoji using string slicing, preserving item variety
+    const originalText = btn.innerHTML.trim();
+    const emoji = originalText.startsWith('<') ? '⭐' : originalText.substring(0, 2);
+    
     if (addCpc > 0) {
-        btn.innerHTML = `✏️ ${name} (Cost: ${newCost}) <br><small>Gives +${addCpc} per click!</small>`;
+        btn.innerHTML = `${emoji} ${name} (Cost: ${newCost}) <br><small>Gives +${addCpc} per click!</small>`;
     } else {
-        btn.innerHTML = `🤖 ${name} (Cost: ${newCost}) <br><small>Earns +${addCps} every second!</small>`;
+        btn.innerHTML = `${emoji} ${name} (Cost: ${newCost}) <br><small>Earns +${addCps} every second!</small>`;
     }
 
     updateDisplay();
 }
 
 function updateDisplay() {
-    scoreEl.textContent = score;
-    cpcEl.textContent = cpc;
-    cpsEl.textContent = cps;
+    // OPTIMISATION: Round figures locally to maintain clean integer layout values
+    scoreEl.textContent = Math.floor(score).toLocaleString();
+    cpcEl.textContent = cpc.toLocaleString();
+    cpsEl.textContent = cps.toLocaleString();
 }
 
 setInterval(() => {
