@@ -1,349 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Clicker</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- FIXED: Added accurate Google Fonts stylesheets link for Fredoka One and Quicksand -->
+    <link rel="preconnect" href="https://googleapis.com">
+    <link rel="preconnect" href="https://gstatic.com" crossorigin>
+    <link href="https://googleapis.com/css2?family=Fredoka:wght@300..700&family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="game-container">
+        <button id="theme-toggle" class="theme-btn">🌙 Dark Mode</button>
 
-:root {
-    --bg-body: #e0f2fe;
-    --bg-container: #ffffff;
-    --bg-scoreboard: #f1f5f9;
-    --bg-statbox: #ffffff;
-    --bg-shop: #f8fafc;
-    --text-headings: #1e293b;
-    --text-label: #64748b;
-    --text-shop-title: #475569;
-    --modal-overlay: rgba(15, 23, 42, 0.4);
-    --input-border: #fbcfe8;
-    --input-bg: #fdf2f8;
-    --input-focus: #fce7f3;
-}
+        <h1>Math Clicker</h1>
+        
+        <div class="score-board">
+            <div class="stat-box">
+                <span class="stat-label">Score</span>
+                <span id="score" class="stat-value">0</span>
+            </div>
+            <div class="stat-sub-row">
+                <div class="stat-box sub">
+                    <span class="stat-label">Per Click</span>
+                    <span id="cpc" class="stat-value-sub">1</span>
+                </div>
+                <div class="stat-box sub">
+                    <span class="stat-label">Per Second</span>
+                    <span id="cps" class="stat-value-sub">0</span>
+                </div>
+            </div>
+        </div>
 
+        <!-- Floating text container inside the button wrapper -->
+        <div class="click-wrapper" id="click-wrapper">
+            <button id="click-btn"> CLICK HERE </button>
+        </div>
 
-[data-theme="dark"] {
-    --bg-body: #0f172a;
-    --bg-container: #1e293b;
-    --bg-scoreboard: #334155;
-    --bg-statbox: #1e293b;
-    --bg-shop: #334155;
-    --text-headings: #f8fafc;
-    --text-label: #94a3b8;
-    --text-shop-title: #cbd5e1;
-    --modal-overlay: rgba(0, 0, 0, 0.6);
-    --input-border: #475569;
-    --input-bg: #334155;
-    --input-focus: #475569;
-}
+        <div class="shop">
+            <h2> SHOP </h2>
+            
+            <div class="shop-section">
+                <h3> Click Power Upgrades </h3>
+                <button class="upgrade-btn cpc-btn" data-cost="15" data-cpc="1" data-cps="0" data-name="Sharper Pencil">
+                    ✏️ Pencil (Cost: 15) <br><small> Gives +1 per click </small>
+                </button>
+                <button class="upgrade-btn cpc-btn" data-cost="150" data-cpc="5" data-cps="0" data-name="Cool Calculator">
+                    📟 Calculator (Cost: 150) <br><small>Gives +5 per click</small>
+                </button>
+                <button class="upgrade-btn cpc-btn" data-cost="1200" data-cpc="25" data-cps="0" data-name="Super Computer">
+                    💻 Computer (Cost: 1200) <br><small>Gives +25 per click</small>
+                </button>
+            </div>
 
-* {
-    box-sizing: border-box;
-}
+            <div class="shop-section">
+                <h3>Auto-Click Upgrades</h3>
+                <button class="upgrade-btn cps-btn" data-cost="30" data-cpc="0" data-cps="1" data-name="Math Buddy">
+                    🧑‍🏫 Friend In Math Class (Cost: 30) <br><small>Earns +1 every second</small>
+                </button>
+                <button class="upgrade-btn cps-btn" data-cost="300" data-cpc="0" data-cps="10" data-name="Math Professor">
+                    🎓 Math Teacher (Cost: 300) <br><small>Earns +10 every second</small>
+                </button>
+                <button class="upgrade-btn cps-btn" data-cost="2500" data-cpc="0" data-cps="75" data-name="Robo Mathematician">
+                    🤖 Math Robot (Cost: 2500) <br><small>Earns +75 every second</small>
+                </button>
+            </div>
+        </div>
+    </div>
 
-body {
-    font-family: 'Quicksand', sans-serif;
-    background-color: var(--bg-body); 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    padding: 20px;
-    transition: background-color 0.2s ease;
-}
+    <!-- Math Quiz Modal -->
+    <div id="math-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">Math Question (Type to answer)</div>
+            <h2 id="modal-title">Unlock Upgrade</h2>
+            <p id="math-question">5 + 5 = ?</p>
+            <input type="number" id="math-answer" placeholder="?" autocomplete="off">
+            <button id="submit-answer">🚀 Check Answer! 🚀</button>
+            <p id="error-msg" class="hidden">Try again</p>
+        </div>
+    </div>
 
-h1, h2, h3, .modal-header, #math-question {
-    font-family: 'Fredoka One', sans-serif;
-    color: var(--text-headings);
-}
-
-h1 {
-    font-size: 26px;
-    margin-top: 0;
-}
-
-.game-container {
-    position: relative;
-    text-align: center;
-    background: var(--bg-container);
-    padding: 25px;
-    border-radius: 20px;
-    width: 100%;
-    max-width: 400px;
-    transition: background-color 0.2s ease;
-}
-
-
-.theme-btn {
-    position: fixed; /* Fixed relative to screen corner instead of the app container */
-    top: 20px;
-    right: 20px;
-    background: var(--bg-scoreboard);
-    color: var(--text-headings);
-    border: none;
-    padding: 8px 14px;
-    font-size: 13px;
-    font-weight: 700;
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: 'Quicksand', sans-serif;
-    z-index: 10; /* Ensures it stays cleanly on top of other content layers */
-    transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-
-
-.score-board {
-    background: var(--bg-scoreboard);
-    padding: 15px;
-    border-radius: 14px;
-    margin-bottom: 20px;
-    margin-top: 0px; /* Reset back to clean alignment */
-    transition: background-color 0.2s ease;
-}
-
-
-.stat-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.stat-box.sub {
-    margin-bottom: 0;
-    width: 48%;
-    background: var(--bg-statbox);
-    padding: 8px;
-    border-radius: 10px;
-    transition: background-color 0.2s ease;
-}
-
-.stat-sub-row {
-    display: flex;
-    justify-content: space-between;
-}
-
-.stat-label {
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    color: var(--text-label);
-    letter-spacing: 0.5px;
-}
-
-#score {
-    font-family: 'Fredoka One', sans-serif;
-    font-size: 36px;
-    color: #ef4444; 
-    animation: bounce 0.3s ease;
-}
-
-.stat-value-sub {
-    font-weight: 700;
-    font-size: 18px;
-    color: #06b6d4; 
-}
-
-.click-wrapper {
-    position: relative;
-    width: 100%;
-    margin-bottom: 25px;
-}
-
-#click-btn {
-    font-family: 'Fredoka One', sans-serif;
-    background: #f97316;
-    color: white;
-    border: none; 
-    padding: 22px;
-    width: 100%;
-    font-size: 24px;
-    border-radius: 16px;
-    cursor: pointer;
-    transition: transform 0.05s, box-shadow 0.05s;
-    box-shadow: 0 8px 0px #ea580c; 
-}
-
-#click-btn:active {
-    transform: translateY(6px);
-    box-shadow: 0 2px 0px #ea580c;
-}
-
-/* Floating click text styling */
-.floating-text {
-    position: absolute;
-    font-family: 'Fredoka One', sans-serif;
-    font-size: 24px;
-    color: #0284c7;
-    pointer-events: none;
-    animation: floatUp 0.8s ease-out forwards;
-    z-index: 10;
-}
-
-@keyframes floatUp {
-    0% {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-    }
-    100% {
-        opacity: 0;
-        transform: translate(-50%, -150%) scale(1.2);
-    }
-}
-
-.shop {
-    margin-top: 30px;
-    padding: 20px 15px;
-    background-color: var(--bg-shop);
-    border-radius: 16px;
-    text-align: center;
-    transition: background-color 0.2s ease;
-}
-
-.shop h2 {
-    font-size: 20px;
-    margin-top: 0;
-    margin-bottom: 15px;
-}
-
-.shop-section h3 {
-    font-size: 14px;
-    color: var(--text-shop-title);
-    margin: 15px 0 8px 0;
-    text-align: left;
-}
-
-.upgrade-btn {
-    display: block;
-    width: 100%;
-    margin: 10px 0;
-    padding: 14px;
-    color: white;
-    border: none; 
-    border-radius: 12px;
-    cursor: pointer;
-    text-align: left;
-    font-size: 15px;
-    font-weight: 700;
-    font-family: 'Quicksand', sans-serif;
-    transition: transform 0.1s;
-}
-
-.cpc-btn {
-    background: #0ea5e9; 
-}
-
-.cps-btn {
-    background: #a855f7; 
-}
-
-.upgrade-btn:hover {
-    transform: scale(1.02);
-}
-
-.upgrade-btn:active {
-    transform: scale(0.98);
-}
-
-.upgrade-btn small {
-    font-weight: 500;
-    display: block;
-    margin-top: 2px;
-    opacity: 0.9;
-}
-
-/* Playful Modal (Math Dialog) */
-.modal {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: var(--modal-overlay); 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 100;
-    transition: background-color 0.2s ease;
-}
-
-.modal.hidden {
-    display: none;
-}
-
-.modal-content {
-    background: var(--bg-container);
-    padding: 30px;
-    border-radius: 20px;
-    text-align: center;
-    width: 90%;
-    max-width: 320px;
-    border: none; 
-    transition: background-color 0.2s ease;
-}
-
-.modal-header {
-    background: #eab308; 
-    color: #ffffff;
-    padding: 6px 16px;
-    border-radius: 8px;
-    border: none; 
-    display: inline-block;
-    font-size: 14px;
-    margin-bottom: 10px;
-}
-
-#modal-title {
-    font-size: 18px;
-    margin: 5px 0;
-}
-
-#math-question {
-    font-size: 36px;
-    margin: 15px 0;
-    color: #2563eb;
-    letter-spacing: 1px;
-}
-
-#math-answer {
-    width: 100%;
-    padding: 12px;
-    font-size: 24px;
-    font-family: 'Fredoka One', sans-serif;
-    text-align: center;
-    margin-bottom: 15px;
-    border: 2px solid var(--input-border); 
-    border-radius: 12px;
-    color: #db2777;
-    background: var(--input-bg);
-    transition: border-color 0.2s ease, background-color 0.2s ease;
-}
-
-#math-answer:focus {
-    outline: none;
-    background: var(--input-focus);
-}
-
-#submit-answer {
-    font-family: 'Fredoka One', sans-serif;
-    background: #3b82f6;
-    color: white;
-    border: none; 
-    padding: 14px;
-    font-size: 18px;
-    border-radius: 12px;
-    cursor: pointer;
-    width: 100%;
-}
-
-#submit-answer:hover {
-    background: #2563eb;
-}
-
-#submit-answer:active {
-    transform: scale(0.98);
-}
-
-.hidden {
-    display: none;
-}
-
-#error-msg {
-    color: #dc2626;
-    font-size: 14px;
-    margin-top: 15px;
-    font-weight: 700;
-}
+    <script src="game.js"></script>
+</body>
+</html>
