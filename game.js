@@ -5,21 +5,18 @@ let pendingUpgrade = null;
 let correctAnswer = 0;
 
 document.addEventListener("DOMContentLoaded", () => {
-    const themeToggle = document.getElementById("theme-toggle");
-    const currentTheme = localStorage.getItem("theme");
-
-const scoreEl = document.getElementById('score');
-const cpcEl = document.getElementById('cpc');
-const cpsEl = document.getElementById('cps');
-const clickBtn = document.getElementById('click-btn');
-const clickWrapper = document.getElementById('click-wrapper');
-const upgradeBtns = document.querySelectorAll('.upgrade-btn');
-const mathModal = document.getElementById('math-modal');
-const modalTitle = document.getElementById('modal-title');
-const mathQuestionEl = document.getElementById('math-question');
-const mathAnswerInput = document.getElementById('math-answer');
-const submitAnswerBtn = document.getElementById('submit-answer');
-const errorMsg = document.getElementById('error-msg');
+    const scoreEl = document.getElementById('score');
+    const cpcEl = document.getElementById('cpc');
+    const cpsEl = document.getElementById('cps');
+    const clickBtn = document.getElementById('click-btn');
+    const clickWrapper = document.getElementById('click-wrapper');
+    const upgradeBtns = document.querySelectorAll('.upgrade-btn');
+    const mathModal = document.getElementById('math-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const mathQuestionEl = document.getElementById('math-question');
+    const mathAnswerInput = document.getElementById('math-answer');
+    const submitAnswerBtn = document.getElementById('submit-answer');
+    const errorMsg = document.getElementById('error-msg');
 
 clickBtn.addEventListener('click', (event) => {
     score += cpc;
