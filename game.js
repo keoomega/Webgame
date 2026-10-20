@@ -8,25 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const themeToggle = document.getElementById("theme-toggle");
     const currentTheme = localStorage.getItem("theme");
 
-    if (currentTheme === "dark") {
-        document.documentElement.setAttribute("data-theme", "dark");
-        themeToggle.textContent = "☀️ Light Mode";
-    }
-
-    themeToggle.addEventListener("click", () => {
-        let theme = "light";
-        if (document.documentElement.getAttribute("data-theme") !== "dark") {
-            document.documentElement.setAttribute("data-theme", "dark");
-            themeToggle.textContent = "☀️ Light Mode";
-            theme = "dark";
-        } else {
-            document.documentElement.removeAttribute("data-theme");
-            themeToggle.textContent = "🌙 Dark Mode";
-        }
-        localStorage.setItem("theme", theme);
-    });
-});
-
 const scoreEl = document.getElementById('score');
 const cpcEl = document.getElementById('cpc');
 const cpsEl = document.getElementById('cps');
